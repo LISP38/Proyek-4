@@ -1,6 +1,10 @@
 package com.example.pertemuan1.ui
 
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,13 +16,15 @@ import com.example.pertemuan1.viewmodel.DataViewModel
 fun AppNavHost(viewModel: DataViewModel) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "form") {
-        composable("form") {
-            DataEntryScreen(navController = navController, viewModel = viewModel)
-        }
+    NavHost(navController = navController, startDestination = "list") {
         composable("list") {
             DataListScreen(navController = navController, viewModel = viewModel)
         }
+
+        composable("form") {
+            DataEntryScreen(navController = navController, viewModel = viewModel)
+        }
+
         composable(
             route = "edit/{id}" +
                     "",
@@ -32,6 +38,8 @@ fun AppNavHost(viewModel: DataViewModel) {
             val dataId = backStackEntry.arguments?.getString("dataId")?.toIntOrNull() ?: 0
             DeleteScreen(navController, viewModel, dataId)
         }
+
+
 
     }
 }

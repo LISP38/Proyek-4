@@ -3,6 +3,7 @@ package com.example.pertemuan1.ui
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -43,6 +44,11 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                 text = "Input Data",
                 style = MaterialTheme.typography.headlineMedium
             )
+
+            Button(onClick = {navController.popBackStack()},
+                shape = RoundedCornerShape(8.dp)
+            ) {Text(text = "Back")}
+
             OutlinedTextField(
                 value = kodeProvinsi,
                 onValueChange = { kodeProvinsi = it },

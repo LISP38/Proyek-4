@@ -62,6 +62,11 @@ fun EditScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
+
+            Button(onClick = {navController.popBackStack()},
+                shape = RoundedCornerShape(8.dp)
+            ) {Text(text = "Back")}
+
             OutlinedTextField(
                 value = kodeProvinsi,
                 onValueChange = { kodeProvinsi = it },
