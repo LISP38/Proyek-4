@@ -17,7 +17,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.pertemuan1.ui.components.Pertemuan1Button
 import com.example.pertemuan1.viewmodel.DataViewModel
+import com.example.pertemuan1.ui.themenavbar.Pertemuan1Theme
 
 @Composable
 fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) {
@@ -45,9 +47,11 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                 style = MaterialTheme.typography.headlineMedium
             )
 
-            Button(onClick = {navController.popBackStack()},
-                shape = RoundedCornerShape(8.dp)
-            ) {Text(text = "Back")}
+            Pertemuan1Theme{
+                Pertemuan1Button(onClick = {navController.popBackStack()},
+                    shape = RoundedCornerShape(8.dp)
+                ) {Text(text = "Back")}
+            }
 
             OutlinedTextField(
                 value = kodeProvinsi,
@@ -93,25 +97,27 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
-            Button(
-                onClick = {
-                    // Memanggil fungsi insertData pada ViewModel
-                    viewModel.insertData(
-                        kodeProvinsi = kodeProvinsi,
-                        namaProvinsi = namaProvinsi,
-                        kodeKabupatenKota = kodeKabupatenKota,
-                        namaKabupatenKota = namaKabupatenKota,
-                        total = total,
-                        satuan = satuan,
-                        tahun = tahun
-                    )
-                    Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
-                    // Navigasi ke tampilan daftar data
-                    navController.navigate("list")
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Submit Data")
+            Pertemuan1Theme{
+                Pertemuan1Button(
+                    onClick = {
+                        // Memanggil fungsi insertData pada ViewModel
+                        viewModel.insertData(
+                            kodeProvinsi = kodeProvinsi,
+                            namaProvinsi = namaProvinsi,
+                            kodeKabupatenKota = kodeKabupatenKota,
+                            namaKabupatenKota = namaKabupatenKota,
+                            total = total,
+                            satuan = satuan,
+                            tahun = tahun
+                        )
+                        Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+                        // Navigasi ke tampilan daftar data
+                        navController.navigate("list")
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Submit Data")
+                }
             }
         }
     }

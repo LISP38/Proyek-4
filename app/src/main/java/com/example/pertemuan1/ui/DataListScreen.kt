@@ -18,8 +18,10 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.pertemuan1.ui.DeleteScreen
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.livedata.observeAsState
+import com.example.pertemuan1.ui.components.Pertemuan1Button
 import com.example.pertemuan1.ui.theme.TertiaryColor
 import com.example.pertemuan1.viewmodel.DataViewModel
+import com.example.pertemuan1.ui.themenavbar.Pertemuan1Theme
 
 @Composable
 fun DataListScreen(navController: NavHostController, viewModel: DataViewModel) {
@@ -80,7 +82,8 @@ fun DataListScreen(navController: NavHostController, viewModel: DataViewModel) {
                                 horizontalArrangement = Arrangement.End,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Button(
+                                Pertemuan1Theme{
+                                    Pertemuan1Button(
                                     onClick = {
                                         navController.navigate("edit/${item.id}")
                                     },
@@ -88,34 +91,22 @@ fun DataListScreen(navController: NavHostController, viewModel: DataViewModel) {
                                 ) {
                                     Text(text = "Edit")
                                 }
-                                Button(
-                                    onClick = {
-                                        navController.navigate("delete/${item.id}")
-                                    },
-                                    shape = RoundedCornerShape(8.dp)
-                                ) {
-                                    Text(text = "Delete")
+                                Pertemuan1Theme {
+                                        Pertemuan1Button(
+                                            onClick = {
+                                                navController.navigate("delete/${item.id}")
+                                            },
+                                            shape = RoundedCornerShape(8.dp)
+                                        ) {
+                                            Text(text = "Delete")
+                                        }
+                                    }
                                 }
-
                             }
                         }
                     }
                 }
             }
-        }
-
-        FloatingActionButton(
-            onClick = { navController.navigate("form") },
-            modifier = Modifier
-                .align(Alignment.BottomEnd) // ⬅️ FAB di pojok kanan bawah
-                .padding(16.dp), // ⬅️ Memberikan jarak dari tepi
-            containerColor = TertiaryColor
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add, // ⬅️ Icon tambah bawaan
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
         }
     }
 }
