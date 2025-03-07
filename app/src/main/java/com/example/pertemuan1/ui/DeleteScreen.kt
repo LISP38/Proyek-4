@@ -88,7 +88,7 @@ fun DeleteScreen(
                 Button(
                     onClick = {
                         data?.let {
-                            viewModel.deleteData(it)
+                            viewModel.deleteDataById(dataId)
                             Toast.makeText(context, "Data berhasil dihapus!", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
                         }

@@ -52,10 +52,10 @@ class DataViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deleteData(data: DataEntity) {
-        viewModelScope.launch {
-            dao.delete(data)
+    fun deleteDataById(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.deleteById(id)
         }
     }
-
 }
+

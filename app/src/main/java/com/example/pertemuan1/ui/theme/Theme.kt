@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import com.example.pertemuan1.ui.themenavbar.Pertemuan1Theme
 
 private val LightColors = lightColorScheme(
     primary = PrimaryColor,
@@ -16,7 +17,7 @@ private val DarkColors = darkColorScheme(
 )
 
 @Composable
-fun HanyarunrunTheme(
+fun Pertemuan1Theme(
     darkTheme: Boolean = false, // Ubah sesuai preferensi atau logika sistem
     content: @Composable () -> Unit
 ) {
