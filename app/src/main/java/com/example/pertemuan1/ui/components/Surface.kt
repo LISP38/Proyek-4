@@ -21,7 +21,7 @@ import com.example.pertemuan1.ui.themenavbar.Pertemuan1Theme
 import kotlin.math.ln
 
 @Composable
-fun Pertemuan1Surface(
+fun JetsnackSurface(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     color: Color = Pertemuan1Theme.colors.uiBackground,

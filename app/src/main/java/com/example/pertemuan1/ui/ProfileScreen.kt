@@ -1,9 +1,11 @@
 package com.example.pertemuan1.ui
 
+import android.util.Log
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.provider.MediaStore
+import android.graphics.ImageDecoder
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,10 +32,10 @@ import com.example.pertemuan1.viewmodel.ProfileViewModel
 
 @Composable
 fun ProfileScreen(
-    navController: NavHostController,
     viewModel: ProfileViewModel,
     modifier: Modifier = Modifier
 ) {
+    Log.d("Navigation", "ProfileScreen Loaded")
     val user by viewModel.user.observeAsState()
     val context = LocalContext.current
 
@@ -41,13 +43,20 @@ fun ProfileScreen(
     var tempName by remember { mutableStateOf(user?.nama ?: "") }
     var tempId by remember { mutableStateOf(user?.nim ?: "") }
     var tempEmail by remember { mutableStateOf(user?.email ?: "") }
-    var tempProfileImg by remember { mutableStateOf<Bitmap?>(byteArrayToBitmap(user?.profileImg)) }
+    var tempProfileImg by remember { mutableStateOf(byteArrayToBitmap(user?.profileImg)) }
 
     val imagePickerLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
-                tempProfileImg = bitmap
+                tempProfileImg = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val source = ImageDecoder.createSource(context.contentResolver, uri)
+                    ImageDecoder.decodeBitmap(source)
+                } else {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    BitmapFactory.decodeStream(inputStream).also {
+                        inputStream?.close()
+                    }
+                }
                 showToast(context, "Foto berhasil diunggah")
             }
         }

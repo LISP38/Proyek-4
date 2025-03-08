@@ -1,5 +1,6 @@
 package com.example.pertemuan1.ui
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -10,13 +11,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.pertemuan1.viewmodel.DataViewModel
 import androidx.navigation.NavHostController
-import com.example.pertemuan1.SplashScreen
 import com.example.pertemuan1.viewmodel.ProfileViewModel
 import com.example.pertemuan1.ui.theme.BottomBar
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-
+import com.example.pertemuan1.SplashScreen
 
 @Composable
 fun AppNavHost(
@@ -29,16 +28,20 @@ fun AppNavHost(
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != null) {
+            if (currentRoute != null && currentRoute != "splash") {
                 BottomBar(navController)
             }
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "list",
+            startDestination = "splash",
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable("splash") {
+                SplashScreen (navController)
+            }
+
             composable("form") {
                 DataEntryScreen(navController = navController, viewModel = viewModel)
             }
@@ -47,8 +50,13 @@ fun AppNavHost(
                 DataListScreen(navController = navController, viewModel = viewModel)
             }
 
+            composable("jabar"){
+                JabarScreen()
+            }
+
+
             composable("profile") {
-                ProfileScreen(navController = navController, viewModel = profileViewModel)
+                ProfileScreen(viewModel = profileViewModel)
             }
 
             composable(

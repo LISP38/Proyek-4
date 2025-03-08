@@ -1,5 +1,14 @@
 package com.example.pertemuan1.ui
 
+import android.widget.Button
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,121 +23,166 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.livedata.observeAsState
-import com.example.pertemuan1.data.DataEntity
 import com.example.pertemuan1.viewmodel.DataViewModel
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.pertemuan1.data.DataEntity
+import com.example.pertemuan1.ui.components.JetsnackButton
+import com.example.pertemuan1.ui.themenavbar.Pertemuan1Theme
+data class BottomNavItem(val label: String, val icon: ImageVector, val route: String)
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DataListScreen(navController: NavHostController, viewModel: DataViewModel) {
     val dataList by viewModel.dataList.observeAsState(emptyList())
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route ?: "home"
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Bagian Statistik
-        StatistikSection(dataList)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Bagian List Data
-        DataListSection(navController, dataList)
-    }
-}
-
-@Composable
-fun StatistikSection(dataList: List<DataEntity>) {
-    val totalItems = dataList.size
-    val totalSum = dataList.sumOf { it.total }
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        StatistikCard(title = "Total Data", value = totalItems.toString())
-        StatistikCard(title = "Total Semua", value = "$totalSum")
-    }
-}
-
-@Composable
-fun StatistikCard(title: String, value: String, modifier: Modifier = Modifier) {
-    Card(
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        modifier = modifier.padding(8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = value, style = MaterialTheme.typography.headlineMedium)
-        }
-    }
-}
-
-
-@Composable
-fun DataListSection(navController: NavHostController, dataList: List<DataEntity>) {
-    if (dataList.isEmpty()) {
+    Scaffold() {
+        paddingValues ->
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFecfffd))
+                .padding(paddingValues) // Pastikan padding diterapkan ke seluruh Box
         ) {
-            Text(text = "No Data Available", style = MaterialTheme.typography.headlineMedium)
-        }
-    } else {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(dataList) { item ->
-                DataCard(navController, item)
+            // Canvas untuk background lingkaran
+            Canvas(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                drawCircle(
+                    color = Color(0xFF80CBC4), // Warna yang benar dalam format 0x
+                    radius = 800f,
+                    center = Offset(size.width * 0.5f, size.height * 0.01f) // Posisi lingkaran
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp) // Padding untuk konten
+            ) {
+                Spacer(modifier = Modifier.height(22.dp))
+                Text(
+                    text = "Selamat Pagi!",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White // Ubah warna teks menjadi putih
+                )
+                Text(
+                    text = "Angelita Tapitta Hutahaean",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White // Ubah warna teks menjadi putih
+                )
+
+                Spacer(modifier = Modifier.height(22.dp)) // Memberikan jarak setelah teks
+
+                // Efek animasi saat data kosong atau tersedia
+                AnimatedContent(
+                    targetState = dataList.isEmpty(),
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(300)) with fadeOut(animationSpec = tween(300))
+                    },
+                    label = "DataListAnimation"
+                ) { isEmpty ->
+                    if (isEmpty) {
+                        EmptyDataView()
+                    } else {
+                        DataListView(navController, dataList, viewModel)
+                    }
+                }
             }
         }
     }
 }
 
+
 @Composable
-fun DataCard(navController: NavHostController, item: DataEntity) {
+fun EmptyDataView() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "No Data Available", style = MaterialTheme.typography.headlineMedium)
+    }
+}
+
+@Composable
+fun DataListView(navController: NavHostController, dataList: List<DataEntity>, viewModel: DataViewModel) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(dataList) { item ->
+            DataItemCard(navController, item, viewModel)
+        }
+    }
+}
+
+@Composable
+fun DataItemCard(navController: NavHostController, item: DataEntity, viewModel: DataViewModel) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(16.dp)
+            modifier = Modifier.background(MaterialTheme.colorScheme.background).padding(16.dp)
         ) {
             Text(
                 text = "Provinsi: ${item.namaProvinsi} (${item.kodeProvinsi})",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Kabupaten/Kota: ${item.namaKabupatenKota} (${item.kodeKabupatenKota})", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = "Kabupaten/Kota: ${item.namaKabupatenKota} (${item.kodeKabupatenKota})",
+                style = MaterialTheme.typography.labelLarge
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Total: ${item.total} ${item.satuan}", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = "Total: ${item.total} ${item.satuan}",
+                style = MaterialTheme.typography.labelLarge
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Tahun: ${item.tahun}", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = "Tahun: ${item.tahun}",
+                style = MaterialTheme.typography.labelLarge
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(onClick = { navController.navigate("edit/${item.id}") }) {
-                    Text("Edit")
+                Button(
+                    onClick = {
+                        navController.navigate("edit/${item.id}")
+                    },
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(text = "Edit")
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(onClick = { navController.navigate("delete/${item.id}") }) {
-                    Text("Delete")
+                Button(
+                    onClick = {
+                        navController.navigate("delete/${item.id}")
+                    },
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(text = "Delete")
                 }
             }
         }
     }
 }
+

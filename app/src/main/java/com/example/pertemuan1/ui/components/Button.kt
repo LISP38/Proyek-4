@@ -1,7 +1,6 @@
 package com.example.pertemuan1.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.media.Image
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +17,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
-//import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,14 +26,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.pertemuan1.ui.themenavbar.Pertemuan1Theme
 
 @Composable
-
-fun Pertemuan1Button(
+fun JetsnackButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -49,7 +45,7 @@ fun Pertemuan1Button(
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable RowScope.() -> Unit
 ) {
-    Pertemuan1Surface(
+    JetsnackSurface(
         shape = shape,
         color = Color.Transparent,
         contentColor = if (enabled) contentColor else disabledContentColor,
@@ -66,7 +62,7 @@ fun Pertemuan1Button(
                 enabled = enabled,
                 role = Role.Button,
                 interactionSource = interactionSource,
-                indication = null
+                indication = null // Remove ripple indication
             )
     ) {
         ProvideTextStyle(
@@ -78,7 +74,7 @@ fun Pertemuan1Button(
                         minWidth = ButtonDefaults.MinWidth,
                         minHeight = ButtonDefaults.MinHeight
                     )
-//                    .indication(interactionSource, ripple())
+                    .indication(interactionSource, null) // No indication
                     .padding(contentPadding),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
@@ -96,7 +92,7 @@ private val ButtonShape = RoundedCornerShape(percent = 50)
 @Composable
 private fun ButtonPreview() {
     Pertemuan1Theme {
-        Pertemuan1Button(onClick = {}) {
+        JetsnackButton(onClick = {}) {
             Text(text = "Demo")
         }
     }
@@ -108,7 +104,7 @@ private fun ButtonPreview() {
 @Composable
 private fun RectangleButtonPreview() {
     Pertemuan1Theme {
-        Pertemuan1Button(
+        JetsnackButton(
             onClick = {}, shape = RectangleShape
         ) {
             Text(text = "Demo")

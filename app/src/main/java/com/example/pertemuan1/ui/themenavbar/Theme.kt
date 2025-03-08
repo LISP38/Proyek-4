@@ -25,7 +25,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-private val LightColorPalette = Pertemuan1Colors(
+private val LightColorPalette = JetsnackColors(
     brand = Shadow5,
     brandSecondary = Ocean3,
     uiBackground = Neutral0,
@@ -50,7 +50,7 @@ private val LightColorPalette = Pertemuan1Colors(
     isDark = false
 )
 
-private val DarkColorPalette = Pertemuan1Colors(
+private val DarkColorPalette = JetsnackColors(
     brand = Shadow1,
     brandSecondary = Ocean2,
     uiBackground = Neutral8,
@@ -84,7 +84,7 @@ fun Pertemuan1Theme(
 ) {
     val colors = if (darkTheme) DarkColorPalette else LightColorPalette
 
-    ProvidePertemuan1Colors(colors) {
+    ProvideJetsnackColors(colors) {
         MaterialTheme(
             colorScheme = debugColors(darkTheme),
             typography = Typography,
@@ -95,16 +95,16 @@ fun Pertemuan1Theme(
 }
 
 object Pertemuan1Theme {
-    val colors: Pertemuan1Colors
+    val colors: JetsnackColors
         @Composable
-        get() = LocalPertemuan1Colors.current
+        get() = LocalJetsnackColors.current
 }
 
 /**
- * Pertemuan1 custom Color Palette
+ * Jetsnack custom Color Palette
  */
 @Immutable
-data class Pertemuan1Colors(
+data class JetsnackColors(
     val gradient6_1: List<Color>,
     val gradient6_2: List<Color>,
     val gradient3_1: List<Color>,
@@ -136,15 +136,15 @@ data class Pertemuan1Colors(
 )
 
 @Composable
-fun ProvidePertemuan1Colors(
-    colors: Pertemuan1Colors,
+fun ProvideJetsnackColors(
+    colors: JetsnackColors,
     content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(LocalPertemuan1Colors provides colors, content = content)
+    CompositionLocalProvider(LocalJetsnackColors provides colors, content = content)
 }
 
-private val LocalPertemuan1Colors = staticCompositionLocalOf<Pertemuan1Colors> {
-    error("No Pertemuan1ColorPalette provided")
+private val LocalJetsnackColors = staticCompositionLocalOf<JetsnackColors> {
+    error("No JetsnackColorPalette provided")
 }
 
 /**

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -17,7 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.pertemuan1.ui.components.Pertemuan1Button
+import com.example.pertemuan1.ui.components.JetsnackButton
 import com.example.pertemuan1.viewmodel.DataViewModel
 import com.example.pertemuan1.ui.themenavbar.Pertemuan1Theme
 
@@ -48,7 +47,7 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
             )
 
             Pertemuan1Theme{
-                Pertemuan1Button(onClick = {navController.popBackStack()},
+                JetsnackButton(onClick = {navController.popBackStack()},
                     shape = RoundedCornerShape(8.dp)
                 ) {Text(text = "Back")}
             }
@@ -98,7 +97,7 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                 modifier = Modifier.fillMaxWidth()
             )
             Pertemuan1Theme{
-                Pertemuan1Button(
+                JetsnackButton(
                     onClick = {
                         // Memanggil fungsi insertData pada ViewModel
                         viewModel.insertData(
@@ -112,7 +111,7 @@ fun DataEntryScreen(navController: NavHostController, viewModel: DataViewModel) 
                         )
                         Toast.makeText(context, "Data berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
                         // Navigasi ke tampilan daftar data
-                        navController.navigate("list")
+                        navController.navigate("jabar")
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

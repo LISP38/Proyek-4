@@ -1,7 +1,6 @@
 package com.example.pertemuan1.ui
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pertemuan1.data.DataEntity
 import com.example.pertemuan1.viewmodel.DataViewModel
+
 
 @Composable
 fun EditScreen(
@@ -36,13 +36,13 @@ fun EditScreen(
 
     LaunchedEffect(dataId) {
         viewModel.getDataById(dataId)?.let { data ->
-            kodeProvinsi = data.kodeProvinsi
+            kodeProvinsi = data.kodeProvinsi.toString() // Convert to String for UI input
             namaProvinsi = data.namaProvinsi
-            kodeKabupatenKota = data.kodeKabupatenKota
+            kodeKabupatenKota = data.kodeKabupatenKota.toString() // Convert to String for UI input
             namaKabupatenKota = data.namaKabupatenKota
-            total = data.total.toString()
+            total = data.total.toString() // Convert to String for UI input
             satuan = data.satuan
-            tahun = data.tahun.toString()
+            tahun = data.tahun.toString() // Convert to String for UI input
         }
     }
 
@@ -63,14 +63,16 @@ fun EditScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            Button(onClick = {navController.popBackStack()},
+            Button(onClick = { navController.popBackStack() },
                 shape = RoundedCornerShape(8.dp)
-            ) {Text(text = "Back")}
+            ) { Text(text = "Back") }
 
+            // Form Fields
             OutlinedTextField(
                 value = kodeProvinsi,
                 onValueChange = { kodeProvinsi = it },
                 label = { Text("Kode Provinsi") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
@@ -83,6 +85,7 @@ fun EditScreen(
                 value = kodeKabupatenKota,
                 onValueChange = { kodeKabupatenKota = it },
                 label = { Text("Kode Kabupaten/Kota") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
@@ -116,15 +119,21 @@ fun EditScreen(
                 onClick = {
                     val updatedData = DataEntity(
                         id = dataId,
-                        kodeProvinsi = kodeProvinsi,
+                        kodeProvinsi = kodeProvinsi.toIntOrNull() ?: 0, // Convert to Int
                         namaProvinsi = namaProvinsi,
-                        kodeKabupatenKota = kodeKabupatenKota,
+                        kodeKabupatenKota = kodeKabupatenKota.toIntOrNull() ?: 0, // Convert to Int
                         namaKabupatenKota = namaKabupatenKota,
-                        total = total.toDoubleOrNull() ?: 0.0,
+                        total = total.toFloatOrNull() ?: 0.0f, // Convert to Float
                         satuan = satuan,
-                        tahun = tahun.toIntOrNull() ?: 0
+                        tahun = tahun.toIntOrNull() ?: 0 // Convert to Int
                     )
+
+                    // Perbarui data di database lokal
                     viewModel.updateData(updatedData)
+
+                    // Sinkronkan perubahan ke API jika diperlukan
+                    viewModel.updateDataInApi(updatedData)
+
                     Toast.makeText(context, "Data berhasil diupdate!", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 },

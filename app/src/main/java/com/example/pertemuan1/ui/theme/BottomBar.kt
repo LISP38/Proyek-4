@@ -1,5 +1,6 @@
 package com.example.pertemuan1.ui.theme
 
+import android.util.Log
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -15,7 +16,7 @@ fun BottomBar(navController: NavController) {
         val currentRoute = navController.currentDestination?.route
 
         val items = listOf(
-            BottomNavItem("list", Icons.Default.List, "List"),
+            BottomNavItem("jabar", Icons.Default.List, "List"),
             BottomNavItem("form", Icons.Default.Add, "Entry"),
             BottomNavItem("profile", Icons.Default.AccountCircle, "Profile"),
             )
@@ -26,6 +27,7 @@ fun BottomBar(navController: NavController) {
                 label = { Text(item.label) },
                 selected = currentRoute == item.route,
                 onClick = {
+                    Log.d("Navigation", "Clicked on: ${item.route}") // Cek apakah tombol diklik
                     navController.navigate(item.route) {
                         popUpTo(navController.graph.startDestinationId) { inclusive = false }
                     }

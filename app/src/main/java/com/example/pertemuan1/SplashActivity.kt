@@ -12,18 +12,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 
 
 @Composable
-fun SplashScreen(onTimeout: () -> Unit) {
+fun SplashScreen(navController: NavController) {
     var isVisible by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         delay(2000) // Splash screen tampil selama 2 detik
         isVisible = false
         delay(500) // Animasi fade out
-        onTimeout() // Navigasi ke layar berikutnya
+        navController.navigate("jabar") {
+            // Prevent back navigation to splash screen
+            popUpTo("splash") { inclusive = true }
+        }
     }
 
     AnimatedVisibility(
