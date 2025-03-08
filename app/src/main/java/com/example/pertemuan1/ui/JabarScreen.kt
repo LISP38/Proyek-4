@@ -25,7 +25,16 @@ fun JabarScreen(
 
     // Ambil data sekolah ketika screen pertama kali diluncurkan
     LaunchedEffect(Unit) {
+        // Mengambil data dari API dan menyimpannya ke database lokal
         viewModel.fetchDataSekolah()
+    }
+
+    // Mengambil data dari database lokal
+    LaunchedEffect(dataSekolah) {
+        if (dataSekolah.isEmpty()) {
+            // Jika data sekolah kosong, ambil data dari database lokal
+            viewModel.getAllDataSekolah()
+        }
     }
 
     Column(
